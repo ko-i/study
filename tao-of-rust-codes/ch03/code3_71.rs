@@ -1,0 +1,1 @@
+impl<T, U> Into<U> for T where U: From<T>

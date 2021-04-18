@@ -1,0 +1,15 @@
+// 2020-11-05 created by Akson
+// Code4.17 skip2.c
+
+#include <stdio.h>
+
+int main(void)
+{
+	int n;
+
+	printf("Please enter three integers:\n");
+	scanf("%*d %*d %d", &n);
+	printf("The last integer was %d\n", n);
+
+	return 0;
+}

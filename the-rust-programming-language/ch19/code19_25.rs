@@ -1,0 +1,1 @@
+type Thunk = Box<dyn Fn() + Send + 'static>

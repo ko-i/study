@@ -1,0 +1,19 @@
+	.section	__TEXT,__text,regular,pure_instructions
+	.build_version macos, 11, 0	sdk_version 11, 1
+	.globl	_f                      ## -- Begin function f
+	.p2align	4, 0x90
+_f:                                     ## @f
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	movq	_a000000000011111111112222222222333333333444444444455555555556666666666777777777788888888889999999999000000000011111111112222222222333333333444444444455555555556666666666777777777788888888889999999999000000000011111111112222222222333333333444444444455555555556666666666777777777788888888889999999999000000000011111111112222222222333333333444444444455555555556666666666777777777788888888889999999999@GOTPCREL(%rip), %rax
+	movl	$0, (%rax)
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+.subsections_via_symbols
