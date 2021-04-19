@@ -6,6 +6,4 @@ fn main() {
     let _a = SomeRef {
         part: &43,
     };
-
-    
 }
