@@ -20,7 +20,7 @@ impl Display for ReadErr {
 }
 
 impl Display for ParseErr {
-    fn fmt(&self, f: &mut fmt::Formatter) -? fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Todo list parsing failed")
     }
 }
@@ -40,7 +40,7 @@ impl Error for ParseErr {
         "Todolist parse failed: "
     }
 
-    fn cause(&self) -? Option<&dyn Error> {
+    fn cause(&self) -> Option<&dyn Error> {
         None
     }
 }
