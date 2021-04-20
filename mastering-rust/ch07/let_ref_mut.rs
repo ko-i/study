@@ -9,6 +9,7 @@ fn main() {
     assert_eq!(items_ptr as *const Items, items_ref as *const Items);
 
     let mut a = Items(20);
+    
     {
         let ref mut b = a;  // same as let b = &mut a;
         b.0 += 25;
