@@ -16,7 +16,7 @@ dependencies = [
  "libc",
  "log",
  "parking_lot 0.7.1",
- "smallvec",
+ "smallvec 0.6.14",
  "tokio",
  "tokio-codec",
  "tokio-executor",
@@ -27,7 +27,7 @@ dependencies = [
  "tokio-timer",
  "trust-dns-proto 0.5.0",
  "trust-dns-resolver",
- "uuid",
+ "uuid 0.7.4",
 ]
 
 [[package]]
@@ -95,7 +95,7 @@ dependencies = [
  "serde_urlencoded",
  "sha1",
  "slab",
- "smallvec",
+ "smallvec 0.6.14",
  "time",
  "tokio",
  "tokio-current-thread",
@@ -248,6 +248,17 @@ name = "base64"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
+
+[[package]]
+name = "bigdecimal"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1374191e2dd25f9ae02e3aa95041ed5d747fc77b3c102b49fe2dd9a8117a6244"
+dependencies = [
+ "num-bigint",
+ "num-integer",
+ "num-traits",
+]
 
 [[package]]
 name = "bitflags"
@@ -473,12 +484,57 @@ dependencies = [
 ]
 
 [[package]]
+name = "diesel"
+version = "1.4.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "047bfc4d5c3bd2ef6ca6f981941046113524b9a9f9a7cbdfdd7ff40f58e6f542"
+dependencies = [
+ "bigdecimal",
+ "bitflags",
+ "byteorder",
+ "chrono",
+ "diesel_derives",
+ "ipnetwork",
+ "libc",
+ "num-bigint",
+ "num-integer",
+ "num-traits",
+ "pq-sys",
+ "r2d2",
+ "serde_json",
+ "time",
+ "uuid 0.6.5",
+]
+
+[[package]]
+name = "diesel_derives"
+version = "1.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "45f5098f628d02a7a0f68ddba586fb61e80edec3bdc1be3b921f4ceec60858d3"
+dependencies = [
+ "proc-macro2 1.0.26",
+ "quote 1.0.9",
+ "syn 1.0.70",
+]
+
+[[package]]
 name = "digest"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3dd60d1080a57a05ab032377049e0591415d2b31afd7028356dbf3cc6dcb066"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "dotenv"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0d0a1279c96732bc6800ce6337b6a614697b0e74ae058dc03c62ebeb78b4d86"
+dependencies = [
+ "failure",
+ "lazy_static",
+ "regex",
 ]
 
 [[package]]
@@ -801,6 +857,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "instant"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61124eeebbd69b8190558df225adf7e4caafce0d743919e5d6b19652314ec5ec"
+dependencies = [
+ "cfg-if 1.0.0",
+]
+
+[[package]]
 name = "iovec"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -820,6 +885,15 @@ dependencies = [
  "widestring",
  "winapi 0.3.9",
  "winreg",
+]
+
+[[package]]
+name = "ipnetwork"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02c3eaab3ac0ede60ffa41add21970a7df7d91772c03383aac6c2c3d53cc716b"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
@@ -876,8 +950,11 @@ dependencies = [
  "actix-web",
  "bytes",
  "chrono",
+ "diesel",
+ "dotenv",
  "env_logger",
  "futures",
+ "lazy_static",
  "log",
  "serde",
  "serde_derive",
@@ -900,6 +977,15 @@ name = "lock_api"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4da24a77a3d8a6d4862d95f72e6fdb9c09a643ecdb402d754004a557f2bec75"
+dependencies = [
+ "scopeguard 1.1.0",
+]
+
+[[package]]
+name = "lock_api"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a3c91c24eae6777794bb1997ad98bbb87daf92890acab859f7eaa4320333176"
 dependencies = [
  "scopeguard 1.1.0",
 ]
@@ -1055,6 +1141,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-bigint"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "090c7f9998ee0ff65aa5b723e4009f7b217707f1fb5ea551329cc4d6231fb304"
+dependencies = [
+ "autocfg 1.0.1",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
 name = "num-integer"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1126,6 +1223,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "parking_lot"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d7744ac029df22dca6284efe4e898991d28e3085c706c972bcd7da4a27a15eb"
+dependencies = [
+ "instant",
+ "lock_api 0.4.3",
+ "parking_lot_core 0.8.3",
+]
+
+[[package]]
 name = "parking_lot_core"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1134,7 +1242,7 @@ dependencies = [
  "libc",
  "rand 0.6.5",
  "rustc_version",
- "smallvec",
+ "smallvec 0.6.14",
  "winapi 0.3.9",
 ]
 
@@ -1147,9 +1255,23 @@ dependencies = [
  "cfg-if 0.1.10",
  "cloudabi",
  "libc",
- "redox_syscall",
+ "redox_syscall 0.1.57",
  "rustc_version",
- "smallvec",
+ "smallvec 0.6.14",
+ "winapi 0.3.9",
+]
+
+[[package]]
+name = "parking_lot_core"
+version = "0.8.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fa7a782938e745763fe6907fc6ba86946d72f49fe7e21de074e08128a99fb018"
+dependencies = [
+ "cfg-if 1.0.0",
+ "instant",
+ "libc",
+ "redox_syscall 0.2.6",
+ "smallvec 1.6.1",
  "winapi 0.3.9",
 ]
 
@@ -1181,6 +1303,15 @@ name = "ppv-lite86"
 version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac74c624d6b2d21f425f752262f42188365d7b8ff1aff74c82e45136510a4857"
+
+[[package]]
+name = "pq-sys"
+version = "0.4.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6ac25eee5a0582f45a67e837e350d784e7003bd29a5f460796772061ca49ffda"
+dependencies = [
+ "vcpkg",
+]
 
 [[package]]
 name = "proc-macro2"
@@ -1222,6 +1353,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3d0b9745dc2debf507c8422de05d7226cc1f0644216dfdfead988f9b1ab32a7"
 dependencies = [
  "proc-macro2 1.0.26",
+]
+
+[[package]]
+name = "r2d2"
+version = "0.8.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "545c5bc2b880973c9c10e4067418407a0ccaa3091781d1671d46eb35107cb26f"
+dependencies = [
+ "log",
+ "parking_lot 0.11.1",
+ "scheduled-thread-pool",
 ]
 
 [[package]]
@@ -1399,6 +1541,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "41cc0f7e4d5d4544e8861606a285bb08d3e70712ccc7d2b84d7c0ccfaf4b05ce"
 
 [[package]]
+name = "redox_syscall"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8270314b5ccceb518e7e578952f0b72b88222d02e8f77f5ecf7abbb673539041"
+dependencies = [
+ "bitflags",
+]
+
+[[package]]
 name = "regex"
 version = "1.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1445,6 +1596,15 @@ name = "ryu"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
+
+[[package]]
+name = "scheduled-thread-pool"
+version = "0.2.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc6f74fd1204073fa02d5d5d68bec8021be4c38690b61264b2fdb48083d0e7d7"
+dependencies = [
+ "parking_lot 0.11.1",
+]
 
 [[package]]
 name = "scopeguard"
@@ -1555,6 +1715,12 @@ checksum = "b97fcaeba89edba30f044a10c6a3cc39df9c3f17d7cd829dd1446cab35f890e0"
 dependencies = [
  "maybe-uninit",
 ]
+
+[[package]]
+name = "smallvec"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe0f37c9e8f3c5a4a66ad655a93c74daac4ad00c441533bf5c6e7990bb42604e"
 
 [[package]]
 name = "socket2"
@@ -1878,7 +2044,7 @@ dependencies = [
  "lazy_static",
  "log",
  "rand 0.5.6",
- "smallvec",
+ "smallvec 0.6.14",
  "socket2",
  "tokio-executor",
  "tokio-io",
@@ -1902,7 +2068,7 @@ dependencies = [
  "lazy_static",
  "log",
  "rand 0.5.6",
- "smallvec",
+ "smallvec 0.6.14",
  "socket2",
  "tokio-executor",
  "tokio-io",
@@ -1927,7 +2093,7 @@ dependencies = [
  "log",
  "lru-cache",
  "resolv-conf",
- "smallvec",
+ "smallvec 0.6.14",
  "tokio",
  "trust-dns-proto 0.6.3",
 ]
@@ -2001,6 +2167,15 @@ dependencies = [
 
 [[package]]
 name = "uuid"
+version = "0.6.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e1436e58182935dcd9ce0add9ea0b558e8a87befe01c1a301e6020aeb0876363"
+dependencies = [
+ "cfg-if 0.1.10",
+]
+
+[[package]]
+name = "uuid"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "90dbc611eb48397705a6b0f6e917da23ae517e4d127123d2cf7674206627d32a"
@@ -2038,6 +2213,12 @@ dependencies = [
  "cfg-if 0.1.10",
  "v_escape",
 ]
+
+[[package]]
+name = "vcpkg"
+version = "0.2.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbdbff6266a24120518560b5dc983096efb98462e51d0d68169895b237be3e5d"
 
 [[package]]
 name = "version_check"

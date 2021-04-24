@@ -1,29 +1,38 @@
-use actix::Actor;
-use actix::SyncContext;
-use actix::Message;
-use actix::Handler;
-use actix_web::{error, Error};
-use std::sync::{Arc, Mutex};
-use crate::links::Links;
+use diesel::pg::PgConnection;
 use actix::Addr;
-use serde_derive::{Serialize, Deserialize};
 use actix::SyncArbiter;
+use std::env;
+use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use actix::{Handler, Message};
+use crate::models::Link;
+use serde_derive::{Serialize, Deserialize};
+use crate::schema::linksnap;
+use std::ops::Deref;
 
 const DB_THREADS: usize = 3;
 
-#[derive(Clone)]
-pub struct Db {
-    pub inner: Arc<Mutex<Links>>
-}
+use actix::Actor;
+use actix::SyncContext;
+use actix_web::{error, Error};
+
+pub type PgPool = Pool<ConnectionManager<PgConnection>>;
+type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
+
+pub struct Db(pub PgPool);
 
 impl Db {
-    pub fn new(s: Arc<Mutex<Links>>) -> Db {
-        Db { inner: s }
+    pub fn get_conn(&self) -> Result<PgPooledConnection, Error> {
+        self.0.get().map_err(|e| error::ErrorInternalServerError(e))
     }
 }
 
 impl Actor for Db {
     type Context = SyncContext<Self>;
+}
+
+pub fn init_pool(database_url: &str) -> Result<PgPool, PoolError> {
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
+    Pool::builder().build(manager)
 }
 
 #[derive(Clone)]
@@ -32,12 +41,15 @@ pub struct State {
 }
 
 impl State {
-    pub fn init() -> Self {
-        let state = Arc::new(Mutex::new(Links::new()));
-        let state = SyncArbiter::start(DB_THREADS, move || Db::new(state.clone()));
+    pub fn init() -> State {
+        let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        let pool = init_pool(&database_url).expect("Failed to create pool");
+        let addr = SyncArbiter::start(DB_THREADS, move || Db(pool.clone()));
+
         let state = State {
-            inner: state
+            inner: addr.clone()
         };
+
         state
     }
 
@@ -47,22 +59,26 @@ impl State {
 }
 
 pub struct GetLinks;
- 
+
 impl Message for GetLinks {
-    type Result = Result<String, Error>;
+    type Result = Result<Vec<Link>, Error>;
 }
 
 impl Handler<GetLinks> for Db {
-    type Result = Result<String, Error>;
+    type Result = Result<Vec<Link>, Error>;
+
     fn handle(&mut self, _new_link: GetLinks, _: &mut Self::Context) -> Self::Result {
-        Ok(self.inner.lock().unwrap().links())
+        Link::get_links(self.get_conn()?.deref())
+            .map_err(|_| error::ErrorInternalServerError("Failed to retrieve links"))
     }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[derive(Insertable)]
+#[table_name = "linksnap"]
 pub struct AddLink {
     pub title: String,
-    pub url: String
+    pub url: String,
 }
 
 impl Message for AddLink {
@@ -73,25 +89,26 @@ impl Handler<AddLink> for Db {
     type Result = Result<(), Error>;
 
     fn handle(&mut self, new_link: AddLink, _: &mut Self::Context) -> Self::Result {
-        let mut db_ref = self.inner.lock().unwrap();
-        db_ref.add_link(new_link);
-        Ok(())
+        Link::add_link(new_link, self.get_conn()?.deref())
+            .map(|_| ())
+            .map_err(|_| error::ErrorInternalServerError("Failed inserting link"))
     }
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct RmLink {
-    pub id: i32
+    pub id: LinkId,
 }
 
 impl Message for RmLink {
-    type Result = Result<i32, Error>;
+    type Result = Result<usize, Error>;
 }
 
 impl Handler<RmLink> for Db {
-    type Result = Result<i32, Error>;
+    type Result = Result<usize, Error>;
     fn handle(&mut self, link: RmLink, _: &mut Self::Context) -> Self::Result {
-        let mut db_ref = self.inner.lock().unwrap();
-        db_ref.rm_link(link.id).ok_or(error::ErrorInternalServerError("Failed to remove link"))
+        let db_ref = self.get_conn()?;
+        Link::rm_link(link.id, db_ref.deref())
+            .map_err(|_| error::ErrorInternalServerError("Failed to remove links"))
     }
 }
