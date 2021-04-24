@@ -2,3 +2,4 @@ target/
 u.sh
 dataset/
 my_logs/
+node_modules/
