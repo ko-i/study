@@ -9,7 +9,7 @@ public class PackageTest {
 
         e.raiseSalary(5);
 
-        System.out.println("name = " + e.getName() + ", salary = " + e.getSalary() + ", hireDay = " + e.getHireDay());
+        out.println("name = " + e.getName() + ", salary = " + e.getSalary() + ", hireDay = " + e.getHireDay());
 
     }
 
